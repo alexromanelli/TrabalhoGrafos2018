@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1528248193 source:/home/alex/MEGA/doutorado/disciplinas/teoria-dos-grafos/trabalho-computacional/codigo-fonte/MinimumSpanningTree/main.c
+	<stdio.h>
+	<stdlib.h>
+
