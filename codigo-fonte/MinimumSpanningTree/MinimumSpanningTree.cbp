@@ -31,6 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="ConjuntosDisjuntosLinkedLists.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ConjuntosDisjuntosLinkedLists.h" />
+		<Unit filename="ConjuntosDisjuntosRootedTrees.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ConjuntosDisjuntosRootedTrees.h" />
+		<Unit filename="Grafo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Grafo.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
