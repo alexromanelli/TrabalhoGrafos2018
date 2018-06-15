@@ -1,0 +1,269 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx,url}
+
+\usepackage[brazil,portuguese]{babel}   
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts}
+\usepackage{minted}
+\usepackage{booktabs}
+\setcounter{tocdepth}{1} 
+
+\usepackage[export]{adjustbox}
+\usepackage{subfig}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{textcomp}
+\usepackage[ruled,portuguese]{algorithm2e}
+\SetAlFnt{\footnotesize\sf}
+
+\title[UFES -- Teoria dos Grafos]{Teoria dos Grafos\\Árvore Geradora Mínima}
+
+\author[Romanelli, Dardengo]{Alexandre Romanelli, Gabriel Dardengo}
+
+\institute[UFES]{UNIVERSIDADE FEDERAL DO ESPÍRITO SANTO}
+
+\date[11/06/2018]{11 de junho de 2018}
+\usetheme{CambridgeUS}
+\usecolortheme{dolphin}
+\usefonttheme{structurebold}
+
+
+\begin{document}
+
+\begin{frame}[plain]
+ \titlepage
+\end{frame}
+
+\begin{frame}[plain]{Estrutura da apresentação}
+ \tableofcontents
+\end{frame}
+
+\section{Definições}
+
+\begin{frame}{Definições -- Árvore Geradora}
+	Dado um grafo $G = (V, E)$, uma \textbf{árvore geradora} é um subgrafo $T_i = (V, E_i)$, com $E_i \subseteq E$ e $T_i$ é conexo e acíclico.\\
+	\\
+	O custo $C_i$ da árvore geradora $T_i$ é:
+	\begin{equation*}
+	C_i = \sum_{e \in E_i} \textit{custo}(e)
+	\end{equation*}
+\end{frame}
+
+\begin{frame}{Definições -- Árvore Geradora Mínima}
+	Dado o conjunto de árvores geradoras de um grafo $G$:\\
+	\begin{equation*}
+	\mathcal{T} = \lbrace T_i \mid T_i \text{ é uma árvore geradora de } G \rbrace
+	\end{equation*}
+	\\
+	Uma \textbf{árvore geradora mínima} de um grafo $G$ é definida como abaixo:
+	\begin{equation*}
+	T_{\text{min}} = T_i \in \mathcal{T} \mid \forall T_j \in \mathcal{T}, C_i \le C_j
+	\end{equation*}
+\end{frame}
+
+
+\section{Algoritmo de Kruskal}
+
+\subsection{Introdução}
+
+\begin{frame}{Algoritmo de Kruskal}
+	\begin{columns}
+		\begin{column}{0.4\textwidth}
+			\begin{figure}
+				\centering
+					\includegraphics[width=0.7\linewidth]{img/kruskal}
+				\label{fig:kruskal}
+			\end{figure}
+			\begin{center}
+				Joseph Bernard\\Kruskal, Jr.
+			\end{center}
+		\end{column}
+		\begin{column}{0.6\textwidth}
+			O algoritmo proposto em \cite{kruskal1956} encontra uma árvore geradora mínima para um grafo $G$ com o seguinte método guloso:
+			\begin{itemize}
+				\item Inicialmente, as arestas de $G$ são ordenadas por seus custos (ordem não-decrescente).
+				\item É feito um percurso na lista ordenada de arestas. Para cada aresta, é verificado se esta pode ser incluída na solução, sem gerar ciclo.\\
+				\item Se puder, a aresta é incluída na solução.
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\subsection{O algoritmo}
+
+\begin{frame}{Algoritmo de Kruskal -- Pseudocódigo}
+	\begin{algorithm}[H]
+		\LinesNotNumbered
+		\DontPrintSemicolon
+		\SetKwInOut{Input}{entrada}
+		\SetKwInOut{Output}{saída}
+		\Input{grafo $G = (V, E)$}
+		\Output{árvore geradora mínima $T$}
+		\BlankLine
+		\Begin{
+			$T \leftarrow \emptyset$ \;
+			$\textit{Gerar-Conjuntos-Disjuntos}(V)$ \;
+			$L \leftarrow$ arestas de $E$ em ordem não-decrescente de custo \;
+			\For{$i$ de $1$ até $|E|$}{
+				$(u, v) \leftarrow L\text{.obterElemento}(i)$ \;
+				\If{$\textit{Conjunto-Que-Contém}(u) \neq \textit{Conjunto-Que-Contém}(v)$}{
+					$T \leftarrow T \cup \lbrace (u, v) \rbrace$ \;
+					$\textit{Unir-Conjuntos-Que-Contém}(u, v)$
+				}
+			}
+			\Return{$T$}
+		}
+		\caption{Árvore Geradora Mínima por Kruskal.}
+		\label{alg:mst-kruskal}
+	\end{algorithm}
+	Fonte: adaptado de \cite{cormen2009}.
+\end{frame}
+
+\subsection{Implementação}
+
+\begin{frame}{Implementação do algoritmo de Kruskal}
+	A implementação do algoritmo de Kruskal foi feita na linguagem C, com atenção aos seguintes termos:
+	\begin{itemize}
+		\item Os métodos \textit{Gerar-Conjuntos-Disjuntos}, \textit{Conjunto-Que-Contém} e \textit{Unir-Conjuntos-Que-Contém} usam estrutura de conjuntos disjuntos, que foram testados com duas variantes:
+		\begin{itemize}
+			\item ``\textit{Linked Lists}''
+				Cada conjunto tem um número e é uma lista encadeada de itens. Cada item representa uma aresta e possui um número de conjunto. A união requer correção dos itens de um conjunto.
+			\item ``\textit{Rooted Trees}''
+				Cada conjunto é uma árvore com raiz. Cada item da árvore representa uma aresta e aponta para o seu ``pai'', exceto a raiz, que aponta para si. Os itens têm também informação da altura da sua ramificação. A união de conjuntos equivale a fazer a raiz de uma árvore apontar para a raiz da outra. Uma operação de compactação é feita a cada consulta.
+		\end{itemize}
+		Nos dois casos, há um vetor que associa arestas a itens da estrutura.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Implementação do algoritmo de Kruskal}
+	\begin{itemize}
+		\item A ordenação das arestas de $E$ foi feita com o algoritmo \textit{Quick-sort}, que não requer memória adicional (ordenação ``\textit{in place}'') e o ``tempo'' esperado de execução é $\Theta(n\,\text{log}\,n)$ \cite{cormen2009}.
+	\end{itemize}
+	\begin{figure}
+		\centering
+		\subfloat{\includegraphics[width=.4\linewidth,valign=t]{img/algoritmo-quick-sort}}
+		\subfloat{\includegraphics[width=.4\linewidth,valign=t]{img/algoritmo-partition}}
+		\caption{Algoritmos \textit{Quick-Sort} e \textit{Partition}. Fonte: \cite{cormen2009}.}
+	\end{figure}
+\end{frame}
+
+\subsection{Complexidade}
+
+\begin{frame}{Complexidade}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\linewidth]{img/algoritmo-kruskal.pdf}
+	\end{figure}
+	\begin{itemize}
+		\item Com \textit{rooted trees} para representar conjuntos disjuntos, implementando união por ranqueamento e compressão de caminhos, as operações $\textit{Conjunto-Que-Contém}(\bullet)$ e $\textit{Unir-Conjuntos-Que-Contém}(\bullet, \bullet)$ têm complexidades de tempo:
+		\begin{equation*}
+			O(m \, \alpha(|V|)) \text{ , }
+		\end{equation*}
+		$\alpha(\bullet)$ é uma função de crescimento bem lento e \\
+		\textit{m} é o número de operações realizadas.
+		\item O número de operações de união é igual a $|V| - 1$, portanto, a complexidade de tempo do algoritmo é $O(|E|\times|V|)$ (\textit{considerando-se $\alpha(|V|)$ como uma constante}).
+	\end{itemize}
+\end{frame}
+
+
+\section{Algoritmo de Prim}
+
+\subsection{Introdução}
+
+\begin{frame}{Algoritmo de Prim}
+	O algoritmo de Prim é um algoritmo guloso (\textit{greedy algorithm}) empregado para encontrar uma árvore geradora mínima (\textit{minimal spanning tree}) num grafo conectado, valorado e não direcionado. Isso significa que o algoritmo encontra um subgrafo do grafo original no qual a soma total das arestas é minimizada e todos os vértices estão interligados.
+	\\
+	O algoritmo foi desenvolvido em 1930 pelo matemático Vojt\v{e}ch Jarník e depois pelo cientista da computação Robert Clay Prim em 1957, e redescoberto por Edsger Dijkstra em 1959.
+	\begin{figure}
+	\centering
+	\subfloat[Vojt\v{e}ch Jarník]{
+		\includegraphics[width=.18\linewidth,valign=b]{img/jarnik.jpg}
+	}
+	\qquad
+	\subfloat[Robert Clay Prim]{
+		\includegraphics[width=.25\linewidth,valign=b]{img/robert_prim.jpg}
+	}
+\end{figure}
+\end{frame}
+
+\subsection{O algoritmo}
+
+\begin{frame}{Algoritmo de Prim -- Pseudocódigo}
+	\begin{algorithm}[H]
+	\LinesNotNumbered
+	\DontPrintSemicolon
+	\BlankLine
+	\Begin{
+		$s \leftarrow \textit{seleciona-um-elemento}(G.V)$ \;
+		\ForEach{$v \in G.V$}{
+			$\pi[v] \leftarrow \textit{nulo}$ \;
+		}
+		$Q \leftarrow \lbrace (0, s) \rbrace$, $S \leftarrow \emptyset$ \;
+		\While{$Q \ne \emptyset$}{
+			$v \leftarrow \textit{Extrair-Min}(Q)$, $S \leftarrow S \cup \lbrace v \rbrace$ \;
+			\ForEach{$u \textit{ adjacente a } v$}{
+				\If{$u \in S \textit{ e } \textit{Peso-Aresta}(\pi[u]\text{-}u) > \textit{Peso-Aresta}(v\text{-}u)$}{
+					$Q \leftarrow Q \setminus \lbrace (\textit{Peso-Aresta}(\pi[u]\text{-}u), u) \rbrace$ \;
+					$Q \leftarrow Q \cup \lbrace (\textit{Peso-Aresta}(v\text{-}u), u) \rbrace$ \;
+					$\pi[u] \leftarrow v$ \;
+				}
+			}
+		}
+		\Return{$\lbrace (\pi[v], v) \mid v \in G.V \text{ e } \pi[v] \ne \textit{nulo} \rbrace$}
+	}
+	\caption{Árvore Geradora Mínima por Prim.}
+	\label{alg:mst-prim}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}{Algoritmo de Prim -- Complexidade}
+	\begin{itemize}
+		\item $O(|V|^2)$ -- com matriz de adjacência\\
+		$\qquad$
+		\item $O(|E| \text{ log } |V|)$ -- com lista de adjacência/minHeap
+	\end{itemize}
+\end{frame}
+
+\section{Testes e resultados}
+
+\begin{frame}{Testes realizados}
+	As implementações dos algoritmos de Kruskal e Prim foram testadas com as seguintes instâncias, obtidas de \cite{nineth2006}:
+	\begin{itemize}
+		\item USA-road-d.BAY e USA-road-t.BAY: 321.270 vértices e 800.172 arestas;
+		\item USA-road-d.COL e USA-road-t.COL: 435.666 vértices e 1.057.066 arestas;
+		\item USA-road-d.FLA e USA-road-t.FLA: 1.070.376 vértices e 2.712.798 arestas;
+		\item USA-road-d.NY e USA-road-t.NY: 264.346 vértices e 733.846 arestas.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Resultados obtidos}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\linewidth]{img/resultados-kruskal.pdf}
+		\caption{Resultados obtidos com o algoritmo de Kruskal.}
+		\label{fig:tabela-1-kruskal}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Resultados obtidos}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\linewidth]{img/resultados-prim.pdf}
+		\caption{Resultados obtidos com o algoritmo de Prim.}
+		\label{fig:tabela-1-kruskal}
+	\end{figure}
+\end{frame}
+
+\section{Referências}
+
+\begin{frame}{Referências}
+	
+	\bibliographystyle{apalike}
+	\bibliography{minimum-spanning-tree}
+	
+\end{frame}
+
+\end{document}

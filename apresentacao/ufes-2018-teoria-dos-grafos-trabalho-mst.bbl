@@ -1,0 +1,20 @@
+\begin{thebibliography}{}
+
+\bibitem[Cormen et~al., 2009]{cormen2009}
+Cormen, T., Leiserson, C., Rivest, R., and Stein, C. (2009).
+\newblock {\em Introduction to Algorithms}.
+\newblock Computer science. MIT Press.
+
+\bibitem[Demetrescu et~al., 2006]{nineth2006}
+Demetrescu, C., Goldberg, A., and Johnson, D. (2006).
+\newblock 9th dimacs implementation challenge: Shortest paths.
+\newblock \url{http://www.dis.uniroma1.it/~challenge9}.
+\newblock acessado em 08/06/2018.
+
+\bibitem[Kruskal, 1956]{kruskal1956}
+Kruskal, J.~B. (1956).
+\newblock On the shortest spanning subtree of a graph and the traveling
+  salesman problem.
+\newblock {\em Proceedings of the American Mathematical society}, 7(1):48--50.
+
+\end{thebibliography}

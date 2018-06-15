@@ -41,11 +41,14 @@ extern "C" {
     void adicionarIncidente(TipoGrafo* grafo, int origin, TipoAresta* aresta);
 
     void adicionarAresta(TipoGrafo* grafo, int indArco, int origin, int destination, int weight);
+    
+    void ajustarPeso(TipoAresta* aresta, int weight);
 
     /**
-     * Verificar se os vértices v1 e v2 são adjacentes. Se for, retornar 1, e se não for, 0.
+     * Verificar se os vértices v1 e v2 são adjacentes.
+     * Se forem, retornar a aresta que os une, e se não forem, NULL.
      **/
-    int verificarAdjacente(TipoGrafo* grafo, int v1, int v2);
+    TipoAresta* verificarAdjacente(TipoGrafo* grafo, int v1, int v2);
 
     void limparMemoriaGrafo(TipoGrafo* grafo);
 

@@ -1,0 +1,12 @@
+\select@language {portuguese}
+\beamer@sectionintoc {1}{Defini\c c\~oes}{3}{0}{1}
+\beamer@sectionintoc {2}{Algoritmo de Kruskal}{5}{0}{2}
+\beamer@subsectionintoc {2}{1}{Introdu\c c\~ao}{5}{0}{2}
+\beamer@subsectionintoc {2}{2}{O algoritmo}{6}{0}{2}
+\beamer@subsectionintoc {2}{3}{Implementa\c c\~ao}{7}{0}{2}
+\beamer@subsectionintoc {2}{4}{Complexidade}{9}{0}{2}
+\beamer@sectionintoc {3}{Algoritmo de Prim}{10}{0}{3}
+\beamer@subsectionintoc {3}{1}{Introdu\c c\~ao}{10}{0}{3}
+\beamer@subsectionintoc {3}{2}{O algoritmo}{11}{0}{3}
+\beamer@sectionintoc {4}{Testes e resultados}{13}{0}{4}
+\beamer@sectionintoc {5}{Refer\^encias}{16}{0}{5}

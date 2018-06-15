@@ -1,5 +1,6 @@
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "Grafo.h"
 #include "ConjuntosDisjuntosLinkedLists.h"
 #include "ConjuntosDisjuntosRootedTrees.h"
@@ -15,43 +16,39 @@ void inicializarGrafo(TipoGrafo* grafo) {
 }
 
 void adicionarIncidente(TipoGrafo* grafo, int origin, TipoAresta* aresta) {
-    if (grafo->listasIncidencias[origin].num_itens == 0) {
-        grafo->listasIncidencias[origin].primeiro = (TipoItemListaAresta*) malloc(sizeof(TipoItemListaAresta));
-        grafo->listasIncidencias[origin].primeiro->item = aresta;
-        grafo->listasIncidencias[origin].primeiro->proximo = NULL;
-    } else {
-        struct TipoItemListaAresta* ultimoItem = grafo->listasIncidencias[origin].primeiro;
-        while (ultimoItem->proximo != NULL) {
-            ultimoItem = ultimoItem->proximo;
-        }
-        ultimoItem->proximo = (TipoItemListaAresta*) malloc(sizeof(TipoItemListaAresta));
-        ultimoItem->proximo->item = aresta;
-        ultimoItem->proximo->proximo = NULL;
-    }
+    TipoItemListaAresta* novoItem = (TipoItemListaAresta*) malloc(sizeof(TipoItemListaAresta));
+    novoItem->item = aresta;
+    novoItem->proximo = grafo->listasIncidencias[origin].primeiro;
+    grafo->listasIncidencias[origin].primeiro = novoItem;
     grafo->listasIncidencias[origin].num_itens++;
 }
 
+void ajustarPeso(TipoAresta* aresta, int weight) {
+    aresta->weight = weight;
+}
+
 void adicionarAresta(TipoGrafo* grafo, int indArco, int origin, int destination, int weight) {
+    if (indArco >= grafo->m)
+        printf("Epa!!! %d > %d\n", indArco, grafo->m);
     grafo->arestas[indArco] = (TipoAresta*) malloc(sizeof(TipoAresta));
     grafo->arestas[indArco]->origin = origin;
     grafo->arestas[indArco]->destination = destination;
     grafo->arestas[indArco]->weight = weight;
 
     adicionarIncidente(grafo, origin, grafo->arestas[indArco]);
-    adicionarIncidente(grafo, destination, grafo->arestas[indArco]);
 }
 
 /**
  * Verificar se os vértices v1 e v2 são adjacentes. Se for, retornar 1, e se não for, 0.
  **/
-int verificarAdjacente(TipoGrafo* grafo, int v1, int v2) {
+TipoAresta* verificarAdjacente(TipoGrafo* grafo, int v1, int v2) {
     struct TipoItemListaAresta* itemLista = grafo->listasIncidencias[v1].primeiro;
     while (itemLista != NULL) {
         if (itemLista->item->origin == v2 || itemLista->item->destination == v2)
-            return 1;
+            return itemLista->item;
         itemLista = itemLista->proximo;
     }
-    return 0;
+    return NULL;
 }
 
 void limparMemoriaGrafo(TipoGrafo* grafo) {
